@@ -1,6 +1,9 @@
 import express from 'express'
-import ExpressWs from 'express-ws'
 import cors from 'cors'
+
+import HTTP from 'http'
+
+import IO from 'socket.io'
 
 const app = express()
 
@@ -12,7 +15,8 @@ const corsMiddleware = cors({
 })
 
 app.use(corsMiddleware)
-const expresssWs = ExpressWs(app)
+const server = HTTP.createServer(app)
+const io = IO.listen(server)
 const port = 5000
 
 const requestsArray = []
@@ -23,14 +27,33 @@ app.use((req, res, next) => {
   next()
 })
 
-app.ws('/echo', (ws, req) => {
-  ws.on /
-    ('message',
-    msg => {
-      console.log('Hi there we got a message?' + req)
-      console.log('Message! ', msg)
-      ws.send(msg)
-    })
+// app.ws('/echo', (ws, req) => {
+//   ws.on /
+//     ('message',
+//     msg => {
+//       console.log('Hi there we got a message?' + req)
+//       console.log('Message! ', msg)
+//       ws.send(msg)
+//     })
+// })
+
+io.on('connection', client => {
+  console.log('client connected ')
+
+  client.on('event', data => {
+    console.log('event ', data)
+    /* … */
+  })
+
+  client.on('message', data => {
+    console.log('message ', data)
+    io.emit('message', data)
+  })
+
+  client.on('disconnect', () => {
+    console.log('client disconnected')
+    /* … */
+  })
 })
 
 app.get('/results', (req, res) => {
@@ -44,4 +67,4 @@ app.get('/', (req, res) => {
   res.status(200).send('Hello World!')
 })
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+server.listen(port, () => console.log(`Example app listening on port ${port}!`))
