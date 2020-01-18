@@ -30,6 +30,8 @@ let questions = [
   },
 ]
 
+let selectedQuestionIndex = 0
+
 io.on('connection', client => {
   console.log('client connected ')
 
@@ -46,6 +48,12 @@ io.on('connection', client => {
   client.on('disconnect', () => {
     console.log('client disconnected')
     /* … */
+  })
+
+  client.on('set-active-question', data => {
+    selectedQuestionIndex = data.questionIndex
+
+    io.emit('change-question', questions[selectedQuestionIndex])
   })
 })
 
