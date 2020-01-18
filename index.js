@@ -30,6 +30,8 @@ let questions = [
   },
 ]
 
+let votes = {}
+
 let selectedQuestionIndex = 0
 
 io.on('connection', client => {
@@ -40,11 +42,6 @@ io.on('connection', client => {
     /* … */
   })
 
-  client.on('message', data => {
-    console.log('message ', data)
-    io.emit('message', data)
-  })
-
   client.on('disconnect', () => {
     console.log('client disconnected')
     /* … */
@@ -52,6 +49,7 @@ io.on('connection', client => {
 
   client.on('set-active-question', data => {
     selectedQuestionIndex = data.questionIndex
+    votes = {}
 
     io.emit('change-question', questions[selectedQuestionIndex])
   })
@@ -62,6 +60,12 @@ io.on('connection', client => {
 
   client.on('set-voting-disabled', () => {
     io.emit('set-voting-disabled')
+  })
+
+  client.on('vote', index => {
+    votes[index] = votes[index] ? votes[index] + 1 : 1
+    console.log('Vote registered ', votes)
+    io.emit('update-votes', votes)
   })
 })
 
