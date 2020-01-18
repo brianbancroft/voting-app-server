@@ -7,6 +7,8 @@ import HTTP from 'http'
 import IO from 'socket.io'
 
 const app = express()
+
+// Open everything to cors
 app.use(cors())
 
 // parse application/x-www-form-urlencoded
@@ -14,15 +16,6 @@ app.use(bodyParser.urlencoded({ extended: false }))
 
 // parse application/json
 app.use(bodyParser.json())
-
-// app.use(function(req, res, next) {
-//   res.header('Access-Control-Allow-Origin', '*')
-//   res.header(
-//     'Access-Control-Allow-Headers',
-//     'Origin, X-Requested-With, Content-Type, Accept',
-//   )
-//   next()
-// })
 
 const server = HTTP.createServer(app)
 const io = IO(server)
