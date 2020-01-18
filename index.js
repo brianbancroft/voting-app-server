@@ -55,6 +55,14 @@ io.on('connection', client => {
 
     io.emit('change-question', questions[selectedQuestionIndex])
   })
+
+  client.on('set-voting-active', () => {
+    io.emit('set-voting-active')
+  })
+
+  client.on('set-voting-disabled', () => {
+    io.emit('set-voting-disabled')
+  })
 })
 
 /*
