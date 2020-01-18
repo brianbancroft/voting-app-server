@@ -36,13 +36,6 @@ let questions = [
     answers: ['Superman', 'Batman'],
   },
 ]
-const requestsArray = []
-
-// app.use((req, res, next) => {
-//   console.log('testing middleware')
-//   req.testing = 'testing'
-//   next()
-// })
 
 io.on('connection', client => {
   console.log('client connected ')
@@ -63,21 +56,18 @@ io.on('connection', client => {
   })
 })
 
-app.get('/results', (req, res) => {
-  const response = `Number of hits to hello world: ${requestsArray.length}`
-
-  res.status(200).send(response)
-})
-
+/*
+ ! Retrieves poll questions and answer stored in local memory
+*/
 app.get('/poll', (req, res) => {
   console.log('Questions endpoint triggered')
   res.status(200).send(questions)
 })
 
+/*
+  ! Replaces poll questions and answers stored in local memory
+*/
 app.post('/poll', (req, res) => {
-  console.log('Request body ', req.body)
-  console.log('Is this an array ', Array.isArray(req.body))
-
   const data = req.body
 
   if (
@@ -92,9 +82,7 @@ app.post('/poll', (req, res) => {
 })
 
 app.get('/', (req, res) => {
-  requestsArray.push('item')
   res.status(200).send('ok')
-  // res.redirect('http://localhost:5000')
 })
 
 server.listen(port, () => console.log(`Example app listening on port ${port}!`))
