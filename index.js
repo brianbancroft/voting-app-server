@@ -2,9 +2,9 @@ import express from 'express'
 import cors from 'cors'
 import bodyParser from 'body-parser'
 
-// import HTTP from 'http'
+import HTTP from 'http'
 
-// import IO from 'socket.io'
+import IO from 'socket.io'
 
 const app = express()
 app.use(cors())
@@ -24,8 +24,10 @@ app.use(bodyParser.json())
 //   next()
 // })
 
-// const server = HTTP.createServer(app)
-// const io = IO.listen(server)
+const server = HTTP.createServer(app)
+const io = IO(server)
+io.origins('*:*') // for latest version
+
 const port = 4000
 
 let questions = [
@@ -36,40 +38,30 @@ let questions = [
 ]
 const requestsArray = []
 
-app.use((req, res, next) => {
-  console.log('testing middleware')
-  req.testing = 'testing'
-  next()
+// app.use((req, res, next) => {
+//   console.log('testing middleware')
+//   req.testing = 'testing'
+//   next()
+// })
+
+io.on('connection', client => {
+  console.log('client connected ')
+
+  client.on('event', data => {
+    console.log('event ', data)
+    /* … */
+  })
+
+  client.on('message', data => {
+    console.log('message ', data)
+    io.emit('message', data)
+  })
+
+  client.on('disconnect', () => {
+    console.log('client disconnected')
+    /* … */
+  })
 })
-
-// app.ws('/echo', (ws, req) => {
-//   ws.on /
-//     ('message',
-//     msg => {
-//       console.log('Hi there we got a message?' + req)
-//       console.log('Message! ', msg)
-//       ws.send(msg)
-//     })
-// })
-
-// io.on('connection', client => {
-//   console.log('client connected ')
-
-//   client.on('event', data => {
-//     console.log('event ', data)
-//     /* … */
-//   })
-
-//   client.on('message', data => {
-//     console.log('message ', data)
-//     io.emit('message', data)
-//   })
-
-//   client.on('disconnect', () => {
-//     console.log('client disconnected')
-//     /* … */
-//   })
-// })
 
 app.get('/results', (req, res) => {
   const response = `Number of hits to hello world: ${requestsArray.length}`
@@ -105,4 +97,4 @@ app.get('/', (req, res) => {
   // res.redirect('http://localhost:5000')
 })
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+server.listen(port, () => console.log(`Example app listening on port ${port}!`))
