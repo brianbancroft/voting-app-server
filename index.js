@@ -51,7 +51,9 @@ io.on('connection', client => {
     selectedQuestionIndex = data.questionIndex
     votes = {}
 
-    io.emit('change-question', questions[selectedQuestionIndex])
+    const question = questions[selectedQuestionIndex]
+
+    io.emit('change-question', question || { question: '', answers: [] })
   })
 
   client.on('set-voting-active', () => {
