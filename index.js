@@ -31,11 +31,17 @@ let questions = [
 ]
 
 let votes = {}
-let selectedQuestionIndex = 0
+let selectedQuestionIndex = null
 let selectedVotingStage = 0
 
 io.on('connection', client => {
-  console.log('client connected ')
+  io.to(client.id).emit('initial-context', {
+    selectedVotingStage,
+    selectedQuestion:
+      selectedQuestionIndex === null
+        ? { question: '', answers: [] }
+        : questions[selectedQuestionIndex],
+  })
 
   client.on('event', data => {
     console.log('event ', data)
@@ -64,7 +70,8 @@ io.on('connection', client => {
     io.emit('set-voting-disabled')
   })
 
-  client.on('set-voting-stage', stage => {
+  client.on('set-voting-stage', (stage, somethingElse) => {
+    console.log('stage ', stage, client.id)
     selectedVotingStage = stage
     io.emit('set-voting-stage', stage)
   })
