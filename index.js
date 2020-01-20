@@ -31,8 +31,8 @@ let questions = [
 ]
 
 let votes = {}
-
 let selectedQuestionIndex = 0
+let selectedVotingStage = 0
 
 io.on('connection', client => {
   console.log('client connected ')
@@ -65,6 +65,7 @@ io.on('connection', client => {
   })
 
   client.on('set-voting-stage', stage => {
+    selectedVotingStage = stage
     io.emit('set-voting-stage', stage)
   })
 
