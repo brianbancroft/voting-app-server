@@ -41,6 +41,7 @@ io.on('connection', client => {
       selectedQuestionIndex === null
         ? { question: '', answers: [] }
         : questions[selectedQuestionIndex],
+    votes,
   })
 
   client.on('event', data => {
