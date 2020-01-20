@@ -45,16 +45,6 @@ io.on('connection', client => {
     selectedQuestionIndex,
   })
 
-  client.on('event', data => {
-    console.log('event ', data)
-    /* … */
-  })
-
-  client.on('disconnect', () => {
-    console.log('client disconnected')
-    /* … */
-  })
-
   client.on('set-active-question', data => {
     selectedQuestionIndex = data.questionIndex
     votes = {}
@@ -73,7 +63,6 @@ io.on('connection', client => {
   })
 
   client.on('set-voting-stage', (stage, somethingElse) => {
-    console.log('stage ', stage, client.id)
     selectedVotingStage = stage
     io.emit('set-voting-stage', stage)
   })
@@ -84,7 +73,6 @@ io.on('connection', client => {
 
   client.on('vote', index => {
     votes[index] = votes[index] ? votes[index] + 1 : 1
-    console.log('Vote registered ', votes)
     io.emit('update-votes', votes)
   })
 })
@@ -93,7 +81,6 @@ io.on('connection', client => {
  ! Retrieves poll questions and answer stored in local memory
 */
 app.get('/poll', (req, res) => {
-  console.log('Questions endpoint triggered')
   res.status(200).send(questions)
 })
 
