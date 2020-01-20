@@ -64,6 +64,14 @@ io.on('connection', client => {
     io.emit('set-voting-disabled')
   })
 
+  client.on('set-voting-stage', stage => {
+    io.emit('set-voting-stage', stage)
+  })
+
+  client.on('admin-enter', () => {
+    io.emit('admin-enter')
+  })
+
   client.on('vote', index => {
     votes[index] = votes[index] ? votes[index] + 1 : 1
     console.log('Vote registered ', votes)
