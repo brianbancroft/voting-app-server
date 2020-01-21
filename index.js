@@ -25,8 +25,19 @@ const port = 4000
 
 let questions = [
   {
-    question: 'Superman or Batman',
-    answers: ['Superman', 'Batman'],
+    question: 'What is the best colour?',
+    answers: ['Orange', 'Red', 'Aqua', 'Blue', 'Yellow', 'Mauve'],
+  },
+  {
+    question: 'Who is the best super-hero',
+    answers: [
+      'Goku',
+      'Superman',
+      'Batman',
+      'Spider Man',
+      'Captain Marvel',
+      'You',
+    ],
   },
 ]
 
